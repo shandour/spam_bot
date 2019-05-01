@@ -10,33 +10,31 @@ currency_rates_url = 'https://api.exchangeratesapi.io/latest'
 # cash api responses for the current date
 def cache_to_expire_next_day(check_success=False):
     def wrapper(f):
-        print('adasdasdsadadasdasd')
         cash_date = datetime.utcnow().date()
         f = lru_cache(maxsize=None)(f)
 
         @wraps(f)
         def wrapped(*args, **kwargs):
-            print('6666666666')
             nonlocal cash_date
             nonlocal check_success
             current_date = datetime.utcnow().date()
-            if cash_date != current_date:
-                cash_date < current_date
-                f.clear_cache()
+            if cash_date < current_date:
+                f.cache_clear()
 
             result = f(*args, **kwargs)
             if check_success:
+                success = result[1]
                 result = result[0]
-                if not result[1]:
-                    f.clear_cache()
+                if not success:
+                    f.cache_clear()
             return result
         return wrapped
     return wrapper
 
 
-# @cache_to_expire_next_day(check_success=True)
+@cache_to_expire_next_day(check_success=True)
 def get_currency_rates(base='EUR', check_success=True):
-    print('QUERY')
+    print('QUERrrrrrY')
     success = True
     resp = requests.get(currency_rates_url, {'base': base})
     if resp.ok:
@@ -49,7 +47,7 @@ def get_currency_rates(base='EUR', check_success=True):
             text = 'Sorry, the server returned an invalid response payload.'
             success = False
         except Exception as e:
-            get_currency_rates.clear_cache()
+            get_currency_rates.cache_clear()
             raise e
     else:
         error = res.json()['error']

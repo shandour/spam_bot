@@ -1,4 +1,5 @@
 import random
+import uuid
 
 from telegram import (
     InlineQueryResultArticle,
@@ -15,7 +16,6 @@ from utils import get_currency_rates
 def cermon_answerer():
     defaut_cermon = 'Namo tassa bhagavato arahato sammāsambuddhassā.'
     cermon = ''
-
     with engine.connect() as conn:
         ids = conn.execute(select([cermons.c.id])).fetchall()
         if ids:
@@ -26,12 +26,15 @@ def cermon_answerer():
 
     if not cermon or not cermon[0].strip():
         cermon = defaut_cermon
+    else:
+        cermon = cermon[0]
+
     if len(cermon) > MAX_MESSAGE_LENGTH:
         cermon = cermon[:MAX_MESSAGE_LENGTH-3] + '...'
 
     return [
         InlineQueryResultArticle(
-            id='cermon',
+            id=f'{uuid.uuid4()}',
             title='CERMON',
             input_message_content=InputTextMessageContent(
                 cermon
@@ -41,13 +44,11 @@ def cermon_answerer():
 
 
 def get_latest_CEB_currency_rates():
-    # rates = get_currency_rates()
-    print('WUT')
-    rates, success = get_currency_rates()
-
+    rates = get_currency_rates()
+    print('JKSDASDASDHASDASJDHJS')
     return [
         InlineQueryResultArticle(
-            id='currency',
+            id=f'{uuid.uuid4()}',
             title='LATEST CURRENCY RATES',
             input_message_content=InputTextMessageContent(
                 rates
@@ -57,17 +58,25 @@ def get_latest_CEB_currency_rates():
 
 
 def inline_query(update, context):
+    # the defult as per the docs
+    cache_results = 300
     query = update.inline_query.query
     results = []
     if not query:
         return
     if query.lower() == 'cermon':
         results = cermon_answerer()
+        cache_results = 0
     elif query.lower() == 'currency':
         results = get_latest_CEB_currency_rates()
+        # cache_results = 0
 
     if results:
-        context.bot.answer_inline_query(update.inline_query.id, results)
+        context.bot.answer_inline_query(
+            update.inline_query.id,
+            results,
+            cache_results,
+        )
     else:
         results = [
             InlineQueryResultArticle(
@@ -78,4 +87,8 @@ def inline_query(update, context):
                 )
             )
         ]
-        context.bot.answer_inline_query(update.inline_query.id, results)
+        context.bot.answer_inline_query(
+            update.inline_query.id,
+            results,
+            cache_results,
+        )

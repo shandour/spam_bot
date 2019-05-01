@@ -90,3 +90,4 @@ def info(update, context):
 
 def log_error(update, context):
     logging.error(f'Error: {context.error}.\n Caused by update  {update}')
+    print('ERRRRRROOOOOOOR')
