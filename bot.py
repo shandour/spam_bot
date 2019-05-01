@@ -14,6 +14,7 @@ from commands import (
     start,
     unknown,
     info,
+    currency_rates_with_args,
     log_error
 )
 
@@ -35,15 +36,19 @@ def main():
     # commands
     start_handler = CommandHandler(['start', 'introduction'], start)
     info_handler = CommandHandler(['info', 'howto', 'commands', 'about'], info)
-    # currency_rates_handler = CommandHandler('rates', currency_rates_with_args)
+    currency_rates_handler = CommandHandler(
+        'currency',
+        currency_rates_with_args
+    )
     inline_handler = InlineQueryHandler(inline_query)
     unknown_handler = MessageHandler(Filters.command, unknown)
 
     dispatcher.add_handler(start_handler)
     dispatcher.add_handler(inline_handler)
-    dispatcher.add_handler(unknown_handler)
     dispatcher.add_handler(info_handler)
-    # dispatcher.add_handler(currency_rates_handler)
+    dispatcher.add_handler(currency_rates_handler)
+
+    dispatcher.add_handler(unknown_handler)
     dispatcher.add_error_handler(log_error)
 
     updater.start_polling()

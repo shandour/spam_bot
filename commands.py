@@ -7,6 +7,9 @@ from telegram import (
 )
 from sqlalchemy import create_engine
 
+from utils import get_currency_rates, parse_currency_args
+from consts import allowed_currency_symbols_lst
+
 
 engine = create_engine(config('DATABASE_URL'))
 
@@ -37,6 +40,7 @@ def send_action(action):
 
 @send_action(ChatAction.TYPING)
 def start(update, context):
+    print('DEATHDEATH')
     message = (
         f"Hello! My name is {context.bot.name}. I am a somewhat sad bot "
         "as can be gleaned from my name. Add the 'verbose' flag to learn more."
@@ -68,26 +72,58 @@ def unknown(update, context):
 
 
 def info(update, context):
-    message = f"""
-    My name is {context.bot.name}. I support both the command and the inline mode.
-    The following commands are available in the command mode:
-    1) /start or /introduction to get acqainted with me.
-        You can add a `verbose` (`--verobse` or `-v`) arguments to learn more about me.
-    2) Use one of the /info, /howto, /commands or /about commands to see this message again.
-    3) Use the /currency commands to get the current currency rates from http://exchangeratesapi.io/.
-        Note that the api responses are cached.
-        You can use the following optional arguments with this command in an arbitrary order
-        (arguments not comforming to the syntax will be ignored):
-        base [currency symbol, e.g., EU]
-        date [the api will look at today's rates by default]
-        currencies [a comma separated list of currency symbols]
-    """
+    message = (
+        f'My name is {context.bot.name}.'
+        ' I support both the command and the inline mode.\n'
+        'The following commands are available in the command mode:'
+        '1) /start or /introduction to get acquainted with me.'
+        ' You can add a `verbose` (`--verobse` or `-v`) arguments'
+        ' to learn more about me.\n'
+        '2) Use one of the /info, /howto, /commands or /about commands'
+        ' to see this message again.\n'
+        '3) Use the /currency commands to get the current currency rates'
+        ' from http://exchangeratesapi.io/.'
+        ' Note that the api responses are cached. You can use the following'
+        ' optional arguments with this command in an arbitrary order'
+        ' (arguments not comforming to the syntax will be ignored):\n'
+        'a) base [currency symbol, e.g., EUR];\n'
+        'b) date [in the format year-month-day; if not provided'
+        ' the api will look at today\'s rates by default];\n'
+        'c) currencies [a list of currency symbols separated by spaces,'
+        '  e.g., EU PLN];\n'
+        '4) Type /currency symbols to the the list of allowed symbols'
+        ' (may not be valid for all dates).\n\n'
+        'The inline mode has the following commands:\n'
+        '1) cermon: displays a random exerpt from a Buddhist text; \n'
+        '2) currency: displays today\'s currency rates (the  base is euro)'
+    )
     context.bot.send_message(
         chat_id=update.message.chat_id,
-        text=message
+        text=message,
+        disable_web_page_preview=True,
+    )
+
+
+def currency_rates_with_args(update, context):
+    currency_rates_dct = {}
+
+    if context.args:
+        if context.args[0] == 'symbols':
+                context.bot.send_message(
+                    chat_id=update.message.chat_id,
+                    text=', '.join(allowed_currency_symbols_lst)
+                )
+                return
+
+        currency_rates_dct = parse_currency_args(context.args)
+
+    message = get_currency_rates(**currency_rates_dct)
+
+    context.bot.send_message(
+        chat_id=update.message.chat_id,
+        text=message,
     )
 
 
 def log_error(update, context):
     logging.error(f'Error: {context.error}.\n Caused by update  {update}')
-    print('ERRRRRROOOOOOOR')
