@@ -45,7 +45,6 @@ def cermon_answerer():
 
 def get_latest_CEB_currency_rates():
     rates = get_currency_rates()
-    print('JKSDASDASDHASDASJDHJS')
     return [
         InlineQueryResultArticle(
             id=f'{uuid.uuid4()}',
@@ -69,7 +68,6 @@ def inline_query(update, context):
         cache_results = 0
     elif query.lower() == 'currency':
         results = get_latest_CEB_currency_rates()
-        # cache_results = 0
 
     if results:
         context.bot.answer_inline_query(
