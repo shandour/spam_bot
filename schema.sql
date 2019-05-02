@@ -24,6 +24,13 @@ CREATE TABLE IF NOT EXISTS cermons (
       meta_info VARCHAR(200)
 );
 
+CREATE TABLE IF NOT EXISTS currency_rates (
+       rates JSON NOT NULL,
+       lookup_date Date NOT NULL,
+       base varchar(10) NOT NULL,
+       primary key(lookup_date, base)
+);
+
 
 CREATE INDEX ON notes(chat_id);
 CREATE INDEX ON notes(note_time);

@@ -1,17 +1,13 @@
 from functools import wraps
 import logging
 
-from decouple import config
 from telegram import (
     ChatAction
 )
-from sqlalchemy import create_engine
 
 from utils import get_currency_rates, parse_currency_args
 from consts import allowed_currency_symbols_lst
-
-
-engine = create_engine(config('DATABASE_URL'))
+from db import engine
 
 
 def init_db():

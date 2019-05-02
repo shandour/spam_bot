@@ -8,8 +8,7 @@ from telegram import (
 from telegram.constants import MAX_MESSAGE_LENGTH
 from sqlalchemy import select
 
-from commands import engine
-from db import cermons
+from db import cermons, engine
 from utils import get_currency_rates
 
 
@@ -58,7 +57,7 @@ def get_latest_CEB_currency_rates():
 
 def inline_query(update, context):
     # the defult as per the docs
-    cache_results = 300
+    cache_results = 0
     query = update.inline_query.query
     results = []
     if not query:

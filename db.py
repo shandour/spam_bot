@@ -1,8 +1,12 @@
 from datetime import datetime
 
+from decouple import config
 import sqlalchemy as sa
 from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy.sql import func
 
+
+engine = sa.create_engine(config('DATABASE_URL'))
 
 metadata = sa.MetaData()
 
@@ -31,3 +35,12 @@ cermons = sa.Table('cermons', metadata,
                    sa.Column('title', sa.String(200)),
                    sa.Column('sutta', sa.String(200)),
                    sa.Column('cermon_text', sa.Text, nullable=False))
+
+currency_rates = sa.Table('currency_rates', metadata,
+                          sa.Column('rates', sa.JSON, nullable=False),
+                          sa.Column('base', sa.String(10), primary_key=True),
+                          sa.Column('lookup_date',
+                                    sa.Date,
+                                    primary_key=True,
+                                    default=func.current_date()
+                          ))
