@@ -12,9 +12,10 @@ currency_rates_url = 'https://api.exchangeratesapi.io'
 def get_currency_rates(**kwargs):
     text = ''
     res = {}
+    current_date = datetime.utcnow().date()
     params = {
         'base': kwargs.get('base', 'EUR'),
-        'date': kwargs.get('date', datetime.utcnow().date()),
+        'date': kwargs.get('date', current_date),
         'symbols': kwargs.get('currencies')
     }
 
@@ -33,16 +34,14 @@ def get_currency_rates(**kwargs):
     result = query.fetchone()
 
     if result:
-        print('RESULT')
         res = {
             'rates': result[0],
             'date': result[1],
             'base': result[2],
         }
     else:
-        print('WUUUUT')
         url = currency_rates_url
-        if params.get('date') != datetime.utcnow().date():
+        if params.get('date') != current_date:
             url += f'/{params["date"]}'
         else:
             params.pop('date', None)

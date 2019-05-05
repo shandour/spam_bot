@@ -36,7 +36,6 @@ def send_action(action):
 
 @send_action(ChatAction.TYPING)
 def start(update, context):
-    print('DEATHDEATH')
     message = (
         f"Hello! My name is {context.bot.name}. I am a somewhat sad bot "
         "as can be gleaned from my name. Add the 'verbose' flag to learn more."
@@ -91,7 +90,7 @@ def info(update, context):
         ' (may not be valid for all dates).\n\n'
         'The inline mode has the following commands:\n'
         '1) cermon: displays a random exerpt from a Buddhist text; \n'
-        '2) currency: displays today\'s currency rates (the  base is euro)'
+        '2) currency: displays today\'s currency rates (the base is euro)'
     )
     context.bot.send_message(
         chat_id=update.message.chat_id,

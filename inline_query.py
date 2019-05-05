@@ -57,7 +57,7 @@ def get_latest_CEB_currency_rates():
 
 def inline_query(update, context):
     # the defult as per the docs
-    cache_results = 0
+    cache_results = 300
     query = update.inline_query.query
     results = []
     if not query:
