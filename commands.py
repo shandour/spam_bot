@@ -1,13 +1,38 @@
 from functools import wraps
 import logging
+import os
 
 from telegram import (
     ChatAction
 )
+from decouple import config
 
 from utils import get_currency_rates, parse_currency_args
 from consts import allowed_currency_symbols_lst
-from db import engine
+from db import engine, sermons
+from sqlalchemy import select
+
+sermon_file = config('SERMON_FILE', cast=str, default='')
+
+
+def test_sermons():
+    with engine.connect() as conn:
+        res = conn.execute(
+            select([
+                sermons.c.id
+            ])
+        ).fetchone()
+
+        if not res:
+            if os.path.isfile(sermon_file):
+                with open(sermon_file) as f:
+                    sermons_lst = f.read().split('***')
+                    conn.execute(
+                        sermons.insert(),
+                        [
+                            {'sermon_text': s} for s in sermons_lst
+                        ]
+                    )
 
 
 def init_db():
@@ -16,6 +41,7 @@ def init_db():
             schema = f.read()
             conn.execute(schema)
             logging.info('Created new database')
+    test_sermons()
 
 
 # taken from https://github.com/python-telegram-bot/python-telegram-bot/wiki/Code-snippets#send-action-while-handling-command-decorator

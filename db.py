@@ -29,7 +29,7 @@ notes = sa.Table('notes', metadata,
                  sa.Column('note_time', sa.DateTime, default=datetime.utcnow),
                  sa.Column('created', sa.DateTime, default=datetime.utcnow))
 
-sermons = sa.Table('cermons', metadata,
+sermons = sa.Table('sermons', metadata,
                    sa.Column('id', sa.Integer, primary_key=True),
                    sa.Column('meta_info', sa.String(200)),
                    sa.Column('title', sa.String(200)),
