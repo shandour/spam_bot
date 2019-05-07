@@ -89,7 +89,7 @@ def info(update, context):
         '4) Type /currency symbols to the the list of allowed symbols'
         ' (may not be valid for all dates).\n\n'
         'The inline mode has the following commands:\n'
-        '1) cermon: displays a random exerpt from a Buddhist text; \n'
+        '1) sermon: displays a random exerpt from a Buddhist text; \n'
         '2) currency: displays today\'s currency rates (the base is euro)'
     )
     context.bot.send_message(

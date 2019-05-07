@@ -16,9 +16,9 @@ CREATE TABLE IF NOT EXISTS notes (
       created TIMESTAMP
 );
 
-CREATE TABLE IF NOT EXISTS cermons (
+CREATE TABLE IF NOT EXISTS sermons (
       id SERIAL PRIMARY KEY,
-      cermon_text TEXT NOT NULL,
+      sermon_text TEXT NOT NULL,
       title VARCHAR(200),
       sutta VARCHAR(200),
       meta_info VARCHAR(200)

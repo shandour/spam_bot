@@ -29,12 +29,12 @@ notes = sa.Table('notes', metadata,
                  sa.Column('note_time', sa.DateTime, default=datetime.utcnow),
                  sa.Column('created', sa.DateTime, default=datetime.utcnow))
 
-cermons = sa.Table('cermons', metadata,
+sermons = sa.Table('cermons', metadata,
                    sa.Column('id', sa.Integer, primary_key=True),
                    sa.Column('meta_info', sa.String(200)),
                    sa.Column('title', sa.String(200)),
                    sa.Column('sutta', sa.String(200)),
-                   sa.Column('cermon_text', sa.Text, nullable=False))
+                   sa.Column('sermon_text', sa.Text, nullable=False))
 
 currency_rates = sa.Table('currency_rates', metadata,
                           sa.Column('rates', sa.JSON, nullable=False),
