@@ -52,7 +52,7 @@ def main():
     dispatcher.add_error_handler(log_error)
 
     updater.start_polling()
-    updater.idle()
+#    updater.idle()
 
 
 if __name__ == '__main__':
